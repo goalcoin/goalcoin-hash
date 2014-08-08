@@ -15,9 +15,9 @@ void goalcoin_hash(const char* input, char* output)
 {
     sph_blake512_context     ctx_blake;
     sph_groestl512_context   ctx_groestl;
-    sph_skein512_context     ctx_skein;
     sph_jh512_context        ctx_jh;
     sph_keccak512_context    ctx_keccak;
+    sph_skein512_context     ctx_skein;
     sph_whirlpool_context    ctx_whirlpool1;
 
     //these uint512 in the c++ source of the client are backed by an array of uint32
@@ -31,17 +31,17 @@ void goalcoin_hash(const char* input, char* output)
     sph_groestl512 (&ctx_groestl, hashA, 64);
     sph_groestl512_close(&ctx_groestl, hashB);
 
+    sph_jh512_init(&ctx_jh);
+    sph_jh512 (&ctx_jh, hashB, 64);
+    sph_jh512_close(&ctx_jh, hashA);
+
+    sph_keccak512_init(&ctx_keccak);
+    sph_keccak512 (&ctx_keccak, hashA, 64);
+    sph_keccak512_close(&ctx_keccak, hashB);
+
     sph_skein512_init(&ctx_skein);
     sph_skein512 (&ctx_skein, hashB, 64);
     sph_skein512_close (&ctx_skein, hashA);
-
-    sph_jh512_init(&ctx_jh);
-    sph_jh512 (&ctx_jh, hashA, 64);
-    sph_jh512_close(&ctx_jh, hashB);
-
-    sph_keccak512_init(&ctx_keccak);
-    sph_keccak512 (&ctx_keccak, hashB, 64);
-    sph_keccak512_close(&ctx_keccak, hashA);
 
     sph_whirlpool_init (&ctx_whirlpool1);
     sph_whirlpool (&ctx_whirlpool1, hashA, 64);
